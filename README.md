@@ -1,2 +1,14 @@
-# amazon-notification-bot
-A simple amazon notification bot build with python and selenium framework. 
+# Disclaimer
+
+Credits go to the original project 
+[amazon-notification-bot](https://github.com/dbrysiuk/amazon-notification-bot) by 
+[dennisbrysiuk](https://github.com/dbrysiuk/amazon-notification-bot/commits?author=dennisbrysiuk).
+
+This project strongly relies on the parts and explanations found in the corresponding 
+[blog post](https://medium.com/twodigits/create-a-web-crawler-notification-bot-6cc354a9b04c).
+
+# Timetable Change Notifier
+
+A python bot which checks the website of hof university and searches for timetable changes for a configured study 
+program and semester.
+It will email each configured account if it finds new changes.
