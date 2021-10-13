@@ -1,8 +1,8 @@
 from bot import Bot
 
 if __name__ == '__main__':
-    # replace URL-Text with product that should be checked on Amazon
-    # replase EMAIL-Text where the notification should be sent
-    amazon_bot = Bot("<URL>", "<EMAIL/SMS>", "<PRODUCT NAME>")
-    amazon_bot.check_product_by_url()
+    # pass timetable-changes url in the bot constructor
+    amazon_bot = Bot("https://www.hof-university.de/studierende/info-service/stundenplanaenderungen.html",
+                     "Master Informatik",
+                     "1u2 WS 2021")
     amazon_bot.check_product_by_name()
