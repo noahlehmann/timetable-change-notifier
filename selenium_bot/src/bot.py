@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 class Bot:
@@ -18,7 +18,7 @@ class Bot:
     def check_changes(self):
 
         # browser init and call product url
-        browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+        browser = webdriver.Remote("http://selenium:4444", DesiredCapabilities.FIREFOX)
         browser.get(self.url)
         accepted_cookies = False
         while True:
@@ -33,10 +33,10 @@ class Bot:
                 program = browser.find_element_by_name('tx_stundenplan_stundenplan[studiengang]')
                 Select(program).select_by_visible_text(self.program)
                 semester = browser.find_element_by_id('semesterSelect')
-                time.sleep(2)
+                time.sleep(10)
                 Select(semester).select_by_visible_text(self.semester)
 
-                time.sleep(2)
+                time.sleep(10)
                 changes = browser.find_element_by_id('vorlesungen')
 
                 if "Ersatztermin".lower() in str(changes.text).lower():
@@ -46,6 +46,7 @@ class Bot:
                     browser.quit()
                     break
                 else:
+                    print("refreshing")
                     browser.execute_script("location.reload(true);")
                     time.sleep(5)
             except:
