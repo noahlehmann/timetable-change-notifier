@@ -1,12 +1,11 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
-from alert import Alert
 
 
 class Bot:
@@ -16,54 +15,39 @@ class Bot:
         self.program = program
         self.semester = semester
 
-    def check_product_by_name(self):
-        # browser settings
-        options = Options()
-        options.headless = False
-        options.add_experimental_option("detach", True)
+    def check_changes(self):
 
         # browser init and call product url
         browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
-        # browser = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-        browser.maximize_window()
         browser.get(self.url)
-
-        try:
-            # find search bar type the name of product and press enter
-            searchbar = WebDriverWait(browser, 10).until(
-                        EC.presence_of_element_located((By.NAME, 'tx_stundenplan_stundenplan[studiengang]'))
+        accepted_cookies = False
+        while True:
+            try:
+                if not accepted_cookies:
+                    cookie_button = WebDriverWait(browser, 10).until(
+                        ec.presence_of_element_located((By.ID, 'uc-btn-deny-banner'))
                     )
-            searchbar.send_keys(self.program)
-            searchbar.send_keys(Keys.RETURN)
+                    cookie_button.click()
+                    accepted_cookies = True
 
-            # find link to required product
-            link_to_product = WebDriverWait(browser, 10).until(
-                        EC.presence_of_all_elements_located((By.LINK_TEXT, self.name))
-                    )
+                program = browser.find_element_by_name('tx_stundenplan_stundenplan[studiengang]')
+                Select(program).select_by_visible_text(self.program)
+                semester = browser.find_element_by_id('semesterSelect')
+                time.sleep(2)
+                Select(semester).select_by_visible_text(self.semester)
 
-            # navigate to href from product
-            for link in link_to_product:
-                if link.text == self.name:
-                    link.send_keys(Keys.ENTER)
-                    break
+                time.sleep(2)
+                changes = browser.find_element_by_id('vorlesungen')
 
-            while True:
-                try:
-                    # check if buy button is available with 10 sec page loading time
-                    WebDriverWait(browser, 10).until(
-                        EC.presence_of_element_located((By.ID, 'availability'))
-                    )
-
-                    print("Product is available")
+                if "Ersatztermin".lower() in str(changes.text).lower():
+                    print("changes found")
                     # send email notification
                     # Alert.email_alert(browser.title + " is available !!!", browser.current_url, self.email)
                     browser.quit()
                     break
-                except:
-                    print("Product is not available")
-                    # reload browser and try again
+                else:
                     browser.execute_script("location.reload(true);")
-        except:
-            print("Product is not available")
-            # reload browser and try again
-            browser.execute_script("location.reload(true);")
+                    time.sleep(5)
+            except:
+                print("Problems while reading page")
+                browser.execute_script("location.reload(true);")
