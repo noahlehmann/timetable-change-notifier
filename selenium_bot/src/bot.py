@@ -18,7 +18,16 @@ class Bot:
     def check_changes(self):
 
         # browser init and call product url
-        browser = webdriver.Remote("http://selenium:4444", DesiredCapabilities.FIREFOX)
+        browser = None
+        while browser is None:
+            try:
+                browser = webdriver.Remote("http://selenium:4444", DesiredCapabilities.FIREFOX)
+            except:
+                browser = None
+                retry_interval = 10
+                print(f"could not connect to remote server, trying again in {retry_interval} s")
+                time.sleep(retry_interval)
+
         browser.get(self.url)
         accepted_cookies = False
         while True:

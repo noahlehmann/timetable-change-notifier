@@ -3,7 +3,7 @@ services:
   selenium:
     image: selenium/standalone-firefox:4.0.0
     ports:
-      - "7900:7900"
+      - "7900:7900" # opens debug disply browser in localhost:7900, pw = secret
     shm_size: 2gb
 
   bot:
@@ -13,6 +13,3 @@ services:
       - selenium
     links:
       - "selenium"
-
-
-# todo restart bot hilft bei Problemen, läuft danach, davor stürzt er ab
