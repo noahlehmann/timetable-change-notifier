@@ -5,10 +5,11 @@ import gmail_config as gmail
 
 
 class Alert:
-    def email_alert(subject, body, to):
+    def email_alert(subject, body):
         # gmail account
         user = gmail.user
         password = gmail.password
+        to = gmail.target
 
         # mail message init
         msg = EmailMessage()

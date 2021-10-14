@@ -51,7 +51,7 @@ class Bot:
                 if "Ersatztermin".lower() in str(changes.text).lower():
                     print("changes found")
                     # send email notification
-                    # Alert.email_alert(browser.title + " is available !!!", browser.current_url, self.email)
+                    # Alert.email_alert(browser.title + " is available !!!", browser.current_url)
                     browser.quit()
                     break
                 else:
