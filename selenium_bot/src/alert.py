@@ -1,12 +1,14 @@
-from smtplib import SMTP
 from email.message import EmailMessage
+from smtplib import SMTP
+
+import gmail_config as gmail
 
 
 class Alert:
     def email_alert(subject, body, to):
         # gmail account
-        user = "test.email@gmail.com"
-        password = "password"
+        user = gmail.user
+        password = gmail.password
 
         # mail message init
         msg = EmailMessage()
